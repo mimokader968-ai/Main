@@ -1,0 +1,26 @@
+{
+  "name": "@autoflow/cli",
+  "version": "1.0.0",
+  "description": "AutoFlow Command Line Interface",
+  "main": "dist/index.js",
+  "bin": {
+    "autoflow": "./bin/autoflow"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "jest",
+    "lint": "eslint src/**/*.ts",
+    "format": "prettier --write src/**/*.ts",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@autoflow/core": "workspace:*",
+    "@autoflow/workflow": "workspace:*",
+    "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.3.0"
+  }
+}
