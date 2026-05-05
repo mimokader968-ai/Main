@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: autoflow-postgres
+    environment:
+      POSTGRES_USER: autoflow
+      POSTGRES_PASSWORD: autoflow
+      POSTGRES_DB: autoflow
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - autoflow
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: autoflow-redis
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    networks:
+      - autoflow
+
+  # AutoFlow Application
+  autoflow:
+    build: .
+    container_name: autoflow-app
+    environment:
+      NODE_ENV: production
+      DB_TYPE: postgres
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: autoflow
+      DB_PASSWORD: autoflow
+      DB_NAME: autoflow
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      JWT_SECRET: your-secret-key-change-this
+      ENCRYPTION_KEY: your-encryption-key-change-this
+    ports:
+      - '5678:5678'
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - autoflow
+    volumes:
+      - ./data:/app/data
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  autoflow:
+    driver: bridge
